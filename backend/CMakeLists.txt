@@ -15,6 +15,7 @@ target_link_libraries(OptimalSchedule PRIVATE Qt6::Widgets)
 
 if(MSVC)
     target_compile_options(OptimalSchedule PRIVATE /W4 /permissive-)
+    target_compile_definitions(OptimalSchedule PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
 add_custom_command(TARGET OptimalSchedule POST_BUILD

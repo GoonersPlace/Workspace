@@ -3,11 +3,7 @@
 
 void InputTimeSlots(const char *filePath, TimeSlot slots[], int &n)
 {
-    FILE *file = nullptr;
-    if (fopen_s(&file, filePath, "r") != 0)
-    {
-        file = nullptr;
-    }
+    FILE *file = fopen(filePath, "r");
 
     if (file == NULL)
     {
@@ -25,15 +21,12 @@ void InputTimeSlots(const char *filePath, TimeSlot slots[], int &n)
     }
 
     while (n < MAX_TIMESLOT &&
-           fscanf_s(file,
-                    "%9[^,],%d,%9[^,],%9[^\n]\n",
-                    slots[n].day,
-                    static_cast<unsigned>(sizeof(slots[n].day)),
-                    &slots[n].period,
-                    slots[n].start,
-                    static_cast<unsigned>(sizeof(slots[n].start)),
-                    slots[n].end,
-                    static_cast<unsigned>(sizeof(slots[n].end))) == 4)
+           fscanf(file,
+                  "%9[^,],%d,%9[^,],%9[^\n]\n",
+                  slots[n].day,
+                  &slots[n].period,
+                  slots[n].start,
+                  slots[n].end) == 4)
     {
         n++;
     }

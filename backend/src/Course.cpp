@@ -3,11 +3,7 @@
 
 void InputCourses(const char *filePath, Course courses[], int &n)
 {
-    FILE *file = nullptr;
-    if (fopen_s(&file, filePath, "r") != 0)
-    {
-        file = nullptr;
-    }
+    FILE *file = fopen(filePath, "r");
 
     if (file == NULL)
     {
@@ -18,11 +14,7 @@ void InputCourses(const char *filePath, Course courses[], int &n)
     n = 0;
 
     while (n < MAX_COURSE &&
-           fscanf_s(file,
-                    "%49[^,],%d\n",
-                    courses[n].name,
-                    static_cast<unsigned>(sizeof(courses[n].name)),
-                    &courses[n].periods) == 2)
+           fscanf(file, "%49[^,],%d\n", courses[n].name, &courses[n].periods) == 2)
     {
         n++;
     }
