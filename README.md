@@ -1,101 +1,50 @@
-# Smart Timetable Scheduler
+# Xếp lịch học (Qt Desktop)
 
-Web application for generating and evaluating university timetables using conflict graphs and graph coloring.
+Ứng dụng desktop Qt 6 để đọc dữ liệu môn học và khung giờ từ file text, sau đó xếp lịch bằng tô màu đồ thị tham lam.
 
-## Core idea
+## Chuẩn bị
 
-- Each class/session is a vertex.
-- An edge means two classes cannot occur in the same time slot.
-- Greedy Coloring is the transparent baseline.
-- DSATUR is the first improvement algorithm.
-- Hard constraints must always hold.
-- Soft constraints are scored to compare valid timetables.
+Cần có:
 
-## MVP stack
+- CMake 3.24 trở lên;
+- trình biên dịch C++20 (Visual Studio Build Tools trên Windows);
+- Qt 6.4 trở lên với module **Widgets**.
 
-- **Web frontend:** React + TypeScript + Vite + Tailwind CSS, shadcn/ui-compatible component structure.
-- **Backend:** C++20 + Qt 6 (`QtHttpServer`, `QtSql`, `QtCore`).
-- **Database:** SQLite through Qt SQL.
-- **Build:** CMake + CTest.
-- **C++ quality:** clang-format + clang-tidy + compiler warnings.
-- **Frontend quality:** TypeScript strict + ESLint + Prettier.
-- **Demo exposure:** local runtime; ngrok may expose the local web app during demos.
+Khi Qt không nằm trong đường dẫn mặc định của CMake, cung cấp đường dẫn cài Qt bằng `CMAKE_PREFIX_PATH`:
 
-## AI-agent entry points
+```powershell
+cmake -S . -B cmake-build -DCMAKE_PREFIX_PATH="C:\Qt\6.x.x\msvc2022_64"
+cmake --build cmake-build --config Debug
+```
 
-- Claude Code: read `CLAUDE.md`, then relevant `.claude/skills/*/SKILL.md`.
-- Codex: read root `AGENTS.md`, plus nested `AGENTS.md` for the module being edited.
-- GitHub Copilot: read `.github/copilot-instructions.md`.
-- Product/behavior source of truth: `docs/SRS.md` and `docs/PRD.md`.
+## Dữ liệu đầu vào
 
-## Repository layout
+Đặt hai file sau trong `backend/data/` rồi build lại:
+
+`Course.txt` gồm mỗi môn trên một dòng, theo dạng:
 
 ```text
-.
-├── CLAUDE.md
-├── AGENTS.md
-├── .claude/
-│   ├── memory/
-│   └── skills/
-├── .github/
-├── docs/
-├── backend/
-├── frontend/
-├── scripts/
-├── CMakeLists.txt
-└── .env.example
+Tên môn,số tiết mỗi tuần
+OOP,7
+DiscreteMath,9
 ```
 
-## Initial setup
+`TimeSlot.txt` có dòng đầu là số khung giờ (chỉ để mô tả), các dòng sau theo dạng:
 
-### Backend
-
-Requirements: CMake 3.24+, a C++20 compiler, Qt 6.4+ with Core/Sql/HttpServer, and the Qt SQLite driver.
-
-```bash
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build --output-on-failure
+```text
+Thứ,số tiết,giờ bắt đầu,giờ kết thúc
+MON,1,07:30,08:15
+MON,2,08:15,09:00
 ```
 
-Run the API server:
+## Chạy
 
-```bash
-./build/backend/smart_timetable_api
+Sau khi build, mở:
+
+```powershell
+.\cmake-build\backend\Debug\OptimalSchedule.exe
 ```
 
-Default API URL: `http://127.0.0.1:8080/api/v1`.
+CMake chép dữ liệu vào thư mục `data` cạnh file `.exe`, nên có thể chạy bằng cách nhấp đúp vào file đó. Khi chỉnh sửa dữ liệu trong `backend/data`, build lại để cập nhật bản sao cạnh `.exe`.
 
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### Database
-
-Migrations live in `backend/migrations/` and are the schema source of truth. Apply the initial migration to a local SQLite database with the helper script:
-
-```bash
-./scripts/migrate.sh
-```
-
-## Demo authentication
-
-MVP authentication is intentionally a **demo gate, not production security**. Any syntactically valid `@gmail.com` address plus a non-empty password is accepted as the single `scheduler/admin` role. There is no user-management module in MVP.
-
-## Package managers
-
-The final backend is C++, so Python package manager `uv` is not used. CMake manages C++ builds and npm manages frontend packages.
-
-## Important project rules
-
-1. Do not change architecture, dependencies, database schema, public API contracts, graph-coloring strategy, hard/soft constraints, or MVP scope without owner approval.
-2. Prefer simple, explainable algorithms and code over premature optimization.
-3. Never report a coding task complete unless relevant build/tests/quality checks pass, or clearly state which check could not run and why.
-4. AI agents may read `.env` when necessary but must never modify it, print secrets, copy secrets into logs/docs, or expose them in responses.
-5. Do not commit, push, merge, or change branches unless the owner explicitly asks.
-
-See `docs/` for full specifications.
+Trong cửa sổ ứng dụng, bấm **Tải dữ liệu và xếp lịch** để đọc lại file và tạo bảng lịch. Mỗi môn hiện được coi là xung đột với các môn khác, nên thuật toán phân chúng vào các khung giờ riêng.

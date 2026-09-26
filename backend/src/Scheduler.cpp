@@ -1,5 +1,4 @@
 #include "Scheduler.h"
-#include <stdio.h>
 
 void ColoringGraph(Graph graph, int color[])
 {
@@ -30,11 +29,8 @@ void ColoringGraph(Graph graph, int color[])
         color[i] = c;
     }
 }
-
 void CreateSchedule(
-    Course courses[],
     int nCourse,
-    TimeSlot slots[],
     int nSlot,
     int color[],
     Schedule schedule[])
@@ -50,36 +46,6 @@ void CreateSchedule(
         else
         {
             schedule[i].timeSlotIndex = -1;
-        }
-    }
-}
-
-void OutputSchedule(
-    Schedule schedule[],
-    int nCourse,
-    Course courses[],
-    TimeSlot slots[])
-{
-    printf("\n===== THOI KHOA BIEU =====\n");
-
-    for (int i = 0; i < nCourse; i++)
-    {
-        int courseIndex = schedule[i].courseIndex;
-        int slotIndex = schedule[i].timeSlotIndex;
-
-        printf("%s -> ", courses[courseIndex].name);
-
-        if (slotIndex >= 0)
-        {
-            printf("%s - tiet %d - %s -> %s\n",
-                   slots[slotIndex].day,
-                   slots[slotIndex].period,
-                   slots[slotIndex].start,
-                   slots[slotIndex].end);
-        }
-        else
-        {
-            printf("Chua xep duoc\n");
         }
     }
 }

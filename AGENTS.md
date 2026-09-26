@@ -6,27 +6,19 @@ These instructions apply to the entire repository unless a nested `AGENTS.md` ad
 
 ## Sources of truth
 
-1. `docs/SRS.md` and `docs/PRD.md` are co-primary for product behavior and scope. If they conflict, stop and ask rather than selecting one silently.
-2. `docs/ARCHITECTURE.md` defines mandatory architecture.
-3. `docs/GRAPH_MODEL.md` and `docs/SCHEDULING_RULES.md` define scheduling semantics.
-4. `docs/API.md` defines public API contracts.
-5. `backend/migrations/*.sql` defines database structure; `docs/DATABASE.md` must mirror it.
-6. `docs/DECISIONS.md` records accepted architectural decisions.
+`README.md`, the CMake files, and the C++ source define the current desktop application. The legacy files under `docs/` describe the former web/API proposal and must not be treated as requirements.
 
 ## Mandatory architecture
 
-- Web application.
-- C++20 + Qt 6 backend (`QtHttpServer`, `QtSql`, `QtCore`).
-- SQLite database.
-- React + TypeScript + Vite + Tailwind web frontend.
-- Graph/scheduling core in testable modern C++ with minimal Qt coupling.
-- CMake + CTest for C++ build/tests.
-
-Do not substitute FastAPI, PostgreSQL, Qt Desktop, microservices, or a different core stack without owner approval.
+- Native Windows desktop application.
+- C++20 + Qt 6 Widgets.
+- Text files in `backend/data/` are the runtime input.
+- Graph/scheduling core stays in C++ with the Qt UI in `MainWindow`.
+- CMake builds the application.
 
 ## Autonomy
 
-Small, reversible implementation decisions are allowed. Ask before changing architecture, dependencies, schema, API contract, algorithm strategy, hard/soft constraints, MVP scope, build system, or project-wide configuration.
+Small, reversible implementation decisions are allowed. Ask before changing the input-file format, algorithm strategy, or build system.
 
 ## Quality
 
@@ -34,12 +26,11 @@ Small, reversible implementation decisions are allowed. Ask before changing arch
 - Stay within task scope.
 - Add tests for behavior changes and regression bugs.
 - C++: clang-format, clang-tidy, warnings, CTest.
-- Frontend: TypeScript strict, ESLint, Prettier.
 - Never report success if relevant checks fail.
 
 ## Secrets
 
-`.env` may be read when necessary but must never be modified or have its secret values displayed/copied. Use `.env.example` for documentation.
+Do not add secrets to the repository.
 
 ## Git
 

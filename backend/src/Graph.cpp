@@ -1,5 +1,4 @@
 #include "Graph.h"
-#include <stdio.h>
 
 void InitGraph(Graph &graph, int n)
 {
@@ -24,19 +23,4 @@ void AddEdge(Graph &graph, int u, int v)
 
     graph.A[u][v] = 1;
     graph.A[v][u] = 1;
-}
-
-void OutputGraph(Graph graph)
-{
-    printf("\n===== MA TRAN KE =====\n");
-
-    for (int i = 0; i < graph.n; i++)
-    {
-        for (int j = 0; j < graph.n; j++)
-        {
-            printf("%d ", graph.A[i][j]);
-        }
-
-        printf("\n");
-    }
 }

@@ -1,6 +1,8 @@
 #ifndef TIMESLOT_H
 #define TIMESLOT_H
 
+#define MAX_TIMESLOT 100
+
 struct TimeSlot
 {
     char day[10];
@@ -9,7 +11,6 @@ struct TimeSlot
     char end[10];
 };
 
-void InputTimeSlots(TimeSlot slots[], int &n);
-void OutputTimeSlots(TimeSlot slots[], int n);
+void InputTimeSlots(const char *filePath, TimeSlot slots[], int &n);
 
 #endif

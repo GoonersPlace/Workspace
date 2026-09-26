@@ -1,40 +1,31 @@
 #include "Course.h"
 #include <stdio.h>
 
-#define COURSE_FILE "backend/data/course.txt"
-
-void InputCourses(Course courses[], int &n)
+void InputCourses(const char *filePath, Course courses[], int &n)
 {
-    FILE *file = fopen(COURSE_FILE, "r");
+    FILE *file = nullptr;
+    if (fopen_s(&file, filePath, "r") != 0)
+    {
+        file = nullptr;
+    }
 
     if (file == NULL)
     {
-        printf("Khong mo duoc file course.txt!\n");
         n = 0;
         return;
     }
 
     n = 0;
 
-    while (fscanf(file, "%49[^,],%d\n",
-                  courses[n].name,
-                  &courses[n].periods) == 2)
+    while (n < MAX_COURSE &&
+           fscanf_s(file,
+                    "%49[^,],%d\n",
+                    courses[n].name,
+                    static_cast<unsigned>(sizeof(courses[n].name)),
+                    &courses[n].periods) == 2)
     {
         n++;
     }
 
     fclose(file);
-}
-
-void OutputCourses(Course courses[], int n)
-{
-    printf("Danh sach mon hoc:\n");
-
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d. %s - %d tiet/tuan\n",
-               i + 1,
-               courses[i].name,
-               courses[i].periods);
-    }
 }
